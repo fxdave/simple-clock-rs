@@ -38,6 +38,44 @@ impl<'c> GraphicsContext<'c> {
         self.cr.show_text(text);
     }
 
+    pub fn fill_preserve(&self) {
+        self.cr.fill_preserve();
+    }
+
+    pub fn rounded_rectange(&self, x: f64, y: f64, width: f64, height: f64, corner_radius: f64) {
+        /* a custom shape that could be wrapped in a function */
+
+        let aspect = 1.0;
+        let radius = corner_radius / aspect;
+        let degrees = std::f64::consts::PI / 180.0;
+
+        self.cr.new_sub_path();
+        self.cr.arc(
+            x + width - radius,
+            y + radius,
+            radius,
+            -90.0 * degrees,
+            0.0 * degrees,
+        );
+        self.cr.arc(
+            x + width - radius,
+            y + height - radius,
+            radius,
+            0.0 * degrees,
+            90.0 * degrees,
+        );
+        self.cr.arc(
+            x + radius,
+            y + height - radius,
+            radius,
+            90.0 * degrees,
+            180.0 * degrees,
+        );
+        self.cr
+            .arc(x + radius, y + radius, radius, 180.0 * degrees, 270.0 * degrees);
+        self.cr.close_path();
+    }
+
     pub fn paint(&self) {
         self.cr.paint();
     }

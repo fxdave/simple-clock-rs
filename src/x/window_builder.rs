@@ -58,7 +58,7 @@ impl<'c> WindowBuilder<'c> {
         }
     }
 
-    pub fn build(&self) -> Result<Window, xcb::GenericError> {
+    pub fn build(&self) -> Result<Window, String> {
         let win = Window::new(
             self.conn,
             self.screen,
@@ -66,8 +66,10 @@ impl<'c> WindowBuilder<'c> {
             (self.x, self.y),
         );
 
-        win.set_name(self.title)?;
+        win.set_name(self.title, &self.title.to_lowercase())?;
         win.show()?;
+        win.set_decoration_disabled()?;
+        win.set_normal_hints()?;
         self.conn.flush();
         self.wait_for_expose();
 
